@@ -1,9 +1,6 @@
 package fr.mamz.launcher;
 
-import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
-import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
-import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
-import static com.almasb.fxgl.dsl.FXGL.getInput;
+import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameWorld;
 
 import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
@@ -35,7 +32,8 @@ public class GeneratorMob implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .viewWithBBox(new Rectangle(40, 40, Color.GREENYELLOW))
+//                .viewWithBBox(new Rectangle(40, 40, Color.GREENYELLOW))
+                .view(getAssetLoader().loadTexture("brick.png"))
                 .collidable()
                 .build();
     }

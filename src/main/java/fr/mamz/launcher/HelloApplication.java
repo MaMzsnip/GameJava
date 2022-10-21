@@ -1,39 +1,31 @@
 package fr.mamz.launcher;
 
-import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
-import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
-import static com.almasb.fxgl.dsl.FXGL.getGameController;
-import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
-import static com.almasb.fxgl.dsl.FXGL.onBtnDown;
-import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
-import static com.almasb.fxgl.dsl.FXGL.onKey;
-import static com.almasb.fxgl.dsl.FXGL.run;
-import static com.almasb.fxgl.dsl.FXGL.showMessage;
-import static com.almasb.fxgl.dsl.FXGL.spawn;
-
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.EntityFactory;
-import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
-public class HelloApplication extends GameApplication {
 
+import java.util.Map;
+
+import static com.almasb.fxgl.dsl.FXGL.*;
+
+public class HelloApplication extends GameApplication {
     //https://webtechie.be/post/2020-05-07-getting-started-with-fxgl/
 
+    private final int WIDTH = 800, HEIGHT = 600;
     private GeneratorMob generatorMob;
     private Entity player;
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(800);
-        settings.setHeight(600);
-        settings.setTitle("First game");
+        settings.setWidth(WIDTH);
+        settings.setHeight(HEIGHT);
+        settings.setTitle("BTS GANG");
+        settings.setVersion("1.0");
         this.generatorMob = new GeneratorMob();
-//        getGameWorld().getProperties().
     }
 
     @Override
@@ -48,6 +40,7 @@ public class HelloApplication extends GameApplication {
         onCollisionBegin(EntityType.PROJECTILE, EntityType.ENEMY, (projectile, enemy) -> {
             projectile.removeFromWorld();
             enemy.removeFromWorld();
+            inc("kills", + 1);
         });
 
         onCollisionBegin(EntityType.ENEMY, EntityType.PLAYER, (enemy, player) -> {
@@ -62,7 +55,7 @@ public class HelloApplication extends GameApplication {
 
         /*
         Tout d'abord, nous ajoutons notre usine au monde du jeu, afin de pouvoir utiliser des méthodes telles que spawn().
-        Ensuite, nous initialisons notre playerréférence en faisant apparaître l'entité joueur au centre du jeu.
+        Ensuite, nous initialisons notre player référence en faisant apparaître l'entité joueur au centre du jeu.
         Nous devons également fournir ce lecteur à notre geoWarsFactory car elle en a besoin pour définir le point de départ des nouvelles balles.
 
         Le dernier appel configure une minuterie qui s'exécute toutes les secondes.
@@ -73,10 +66,46 @@ public class HelloApplication extends GameApplication {
         getGameWorld().addEntityFactory(this.generatorMob);
 
         this.player = spawn("Player", getAppWidth() / 2, getAppHeight() / 2);
-        run(() -> spawn("Enemy"), Duration.seconds(1.0));
-        run(() -> spawn("Enemy", 800, 600), Duration.seconds(1.0));
-        run(() -> spawn("Enemy", 0, 600), Duration.seconds(1.0));
-        run(() -> spawn("Enemy", 800, 0), Duration.seconds(1.0));
+
+//        *##
+//        ###
+//        ###
+        run(() -> spawn("Enemy", 0, 0), Duration.seconds(1.0));
+
+//        #*#
+//        ###
+//        ###
+        run(() -> spawn("Enemy", WIDTH / 2, 0), Duration.seconds(1.0));
+
+//        ##*
+//        ###
+//        ###
+        run(() -> spawn("Enemy", WIDTH, 0), Duration.seconds(1.0));
+
+//        ###
+//        ##*
+//        ###
+        run(() -> spawn("Enemy", WIDTH, HEIGHT / 2), Duration.seconds(1.0));
+
+//        ###
+//        ###
+//        ##*
+        run(() -> spawn("Enemy", WIDTH, HEIGHT), Duration.seconds(1.0));
+
+//        ###
+//        ###
+//        #*#
+        run(() -> spawn("Enemy", WIDTH / 2, HEIGHT), Duration.seconds(1.0));
+
+//        ###
+//        ###
+//        *##
+        run(() -> spawn("Enemy", 0, HEIGHT), Duration.seconds(1.0));
+
+//        ###
+//        *##
+//        ###
+        run(() -> spawn("Enemy", 0, HEIGHT / 2), Duration.seconds(1.0));
 
     }
 
@@ -88,14 +117,31 @@ public class HelloApplication extends GameApplication {
         Si vous souhaitez pouvoir tirer pendant que le bouton de la souris est enfoncé, plutôt que sur une seule pression, vous pouvez passer onBtnDown à onBtn.
          */
 
-        onKey(KeyCode.Z, () -> player.translateY(-5));
-        onKey(KeyCode.Q, () -> player.translateX(-5));
-        onKey(KeyCode.S, () -> player.translateY(5));
-        onKey(KeyCode.D, () -> player.translateX(5));
+        onKey(KeyCode.Z, () -> player.translateY(-2));
+        onKey(KeyCode.Q, () -> player.translateX(-2));
+        onKey(KeyCode.S, () -> player.translateY(2));
+        onKey(KeyCode.D, () -> player.translateX(2));
         onBtnDown(MouseButton.PRIMARY, () -> spawn("Projectile", this.player.getCenter()));
+    }
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("kills", 0);
+    }
+
+    @Override
+    protected void initUI() {
+        Text kills = new Text();
+        kills.setTranslateX(WIDTH / 2);
+        kills.setTranslateY(10);
+
+        kills.textProperty().bind(getWorldProperties().intProperty("kills").asString());
+
+        getGameScene().addUINode(kills);
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
+
