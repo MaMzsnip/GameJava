@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
-public class HelloApplication extends GameApplication {
+public class StartGame extends GameApplication {
     //https://webtechie.be/post/2020-05-07-getting-started-with-fxgl/
 
     private final int WIDTH = 800, HEIGHT = 600;
