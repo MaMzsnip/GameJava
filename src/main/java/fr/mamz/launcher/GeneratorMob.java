@@ -32,8 +32,7 @@ public class GeneratorMob implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-//                .viewWithBBox(new Rectangle(40, 40, Color.GREENYELLOW))
-                .view(getAssetLoader().loadTexture("brick.png"))
+                .viewWithBBox(new Rectangle(40, 40, Color.GREENYELLOW))
                 .collidable()
                 .build();
     }

@@ -23,7 +23,7 @@ public class HelloApplication extends GameApplication {
     protected void initSettings(GameSettings settings) {
         settings.setWidth(WIDTH);
         settings.setHeight(HEIGHT);
-        settings.setTitle("BTS GANG");
+        settings.setTitle("BTS GAME");
         settings.setVersion("1.0");
         this.generatorMob = new GeneratorMob();
     }
